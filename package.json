@@ -12,7 +12,8 @@
 		"astro": "astro",
 		"lint": "eslint",
 		"lint:fix": "eslint --fix",
-		"assistant": "tsx ./scripts/assistant.ts"
+		"assistant": "tsx ./scripts/assistant.ts",
+		"deploy": "pnpm run build && wrangler deploy"
 	},
 	"dependencies": {
 		"@astrojs/mdx": "^4.3.9",
@@ -60,7 +61,8 @@
 		"tsx": "^4.20.6",
 		"typescript": "^5.9.3",
 		"unist-util-visit": "^5.0.0",
-		"valid-filename": "^4.0.0"
+		"valid-filename": "^4.0.0",
+		"wrangler": "^4.56.0"
 	},
 	"pnpm": {
 		"ignoredBuiltDependencies": [
