@@ -61,5 +61,17 @@
 		"typescript": "^5.9.3",
 		"unist-util-visit": "^5.0.0",
 		"valid-filename": "^4.0.0"
+	},
+	"pnpm": {
+		"ignoredBuiltDependencies": [
+			"es5-ext",
+			"esbuild",
+			"sharp"
+		],
+		"onlyBuiltDependencies": [
+			"es5-ext",
+			"esbuild",
+			"sharp"
+		]
 	}
 }
