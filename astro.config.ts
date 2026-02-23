@@ -12,8 +12,10 @@ import { toString } from 'hast-util-to-string'
 import { h, s } from 'hastscript'
 import rehypeAutolinkHeadings from 'rehype-autolink-headings'
 import rehypeExternalLinks from 'rehype-external-links'
+import rehypeKatex from 'rehype-katex'
 import rehypeSlug from 'rehype-slug'
 import remarkDirective from 'remark-directive'
+import remarkMath from 'remark-math'
 import remarkSmartypants from 'remark-smartypants'
 import { SITE } from './src/constants'
 import { remarkAsides } from './src/remark'
@@ -46,8 +48,9 @@ export default defineConfig({
 	},
 	markdown: {
 		// @ts-expect-error: Astro types don't match remark plugin
-		remarkPlugins: [[remarkSmartypants, { backticks: false }], remarkDirective, remarkAsides, [remarkSandpack, { componentName: ['Playground'] }]],
+		remarkPlugins: [remarkMath, [remarkSmartypants, { backticks: false }], remarkDirective, remarkAsides, [remarkSandpack, { componentName: ['Playground'] }]],
 		rehypePlugins: [
+			rehypeKatex,
 			rehypeSlug,
 			[
 				rehypeExternalLinks,

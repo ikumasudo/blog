@@ -1,0 +1,41 @@
+---
+interface Props {
+	chart: string
+}
+
+const { chart } = Astro.props
+---
+
+<pre class="mermaid" data-chart={chart} set:text={chart} />
+
+<script>
+	const init = async () => {
+		const { default: mermaid } = await import('mermaid')
+
+		const getTheme = () =>
+			document.documentElement.dataset.theme === 'dark' ? 'dark' : 'default'
+
+		const render = () => {
+			document.querySelectorAll<HTMLPreElement>('pre.mermaid').forEach((el) => {
+				const code = el.dataset.chart
+				if (code) el.textContent = code
+			})
+			mermaid.initialize({ startOnLoad: false, theme: getTheme() })
+			mermaid.run({ querySelector: 'pre.mermaid' })
+		}
+
+		render()
+
+		const observer = new MutationObserver((mutations) => {
+			for (const m of mutations) {
+				if (m.attributeName === 'data-theme') {
+					render()
+					return
+				}
+			}
+		})
+		observer.observe(document.documentElement, { attributes: true })
+	}
+
+	init()
+</script>
