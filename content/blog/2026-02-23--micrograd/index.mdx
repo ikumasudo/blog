@@ -1,0 +1,308 @@
+---
+title: Andrej Karpathy の micrograd を写経して学んだこと
+slug: micrograd
+description: Andrej Karpathy の micrograd を写経して学んだ、自動微分とバックプロパゲーションの仕組み
+date: 2026-02-23
+lastUpdated: 2026-02-23
+tags:
+  - Coding
+  - Machine Learning
+---
+
+Andrej Karpathy の [The spelled-out intro to neural networks and backpropagation: building micrograd](https://www.youtube.com/watch?v=VMj-3S1tku0) を見ながら、実際にコードを書いて動かしてみた。
+
+ニューラルネットワークの学習を支える「自動微分」の仕組みを、Pythonコードでゼロから実装できるという動画だ。この辺りの説明は様々な記事や本で見てきたが、自分の手でゼロから動くものを作るとよく理解できた。
+
+---
+
+import Mermaid from '@components/mermaid.astro'
+
+## 1. Value クラス
+
+micrograd は `Value` クラスを中心に構成されている。スカラー値をラップして、演算するたびに「どの値からどの演算で計算されたか」を記録する。
+
+```python
+class Value:
+    def __init__(self, data, _children=(), _op=''):
+        self.data = data        # 実際の値
+        self.grad = 0.0         # この値に対する出力の勾配
+        self._backward = lambda: None  # 勾配計算のクロージャ
+        self._prev = set(_children)    # 親ノード
+        self._op = _op                 # どの演算で生まれたか
+```
+
+ポイントは3つ:
+
+- `data` — forward pass で計算される実際の値
+- `grad` — backward pass で計算される勾配（「この値を微小に変えたら、最終出力はどれだけ変わるか」）
+- `_backward` — 各演算子に固有の勾配計算ルールを保持するクロージャ
+
+## 2. 演算子のオーバーロードでグラフを自動構築
+
+`__add__` や `__mul__` をオーバーロードして、普通の Python の式を書くだけで計算グラフが裏で構築される。
+
+```python
+def __mul__(self, other):
+    other = other if isinstance(other, Value) else Value(other)
+    out = Value(self.data * other.data, (self, other), '*')
+
+    def _backward():
+        self.grad  += other.data * out.grad
+        other.grad += self.data  * out.grad
+    out._backward = _backward
+
+    return out
+```
+
+### Chain Rule（連鎖律）
+
+`_backward` クロージャの中身が chain rule そのものだ。chain rule とは、合成関数の微分公式:
+
+$$
+\frac{dz}{dx} = \frac{dz}{dy} \cdot \frac{dy}{dx}
+$$
+
+つまり「上流から流れてきた勾配 $\frac{dz}{dy}$（= `out.grad`）に、局所的な微分 $\frac{dy}{dx}$ を掛ける」ということになる。
+
+### 乗算の場合
+
+$c = a \cdot b$ のとき、偏微分は:
+
+$$
+\frac{\partial c}{\partial a} = b, \quad \frac{\partial c}{\partial b} = a
+$$
+
+最終出力を $L$ とすると、chain rule により:
+
+$$
+\frac{\partial L}{\partial a} = \frac{\partial L}{\partial c} \cdot \frac{\partial c}{\partial a} = \frac{\partial L}{\partial c} \cdot b
+$$
+
+これがコード上では `self.grad += other.data * out.grad` に対応する。`out.grad` が $\frac{\partial L}{\partial c}$（上流の勾配）で、`other.data` が $b$（局所微分）に対応する。
+
+### 加算の場合
+
+$c = a + b$ のとき:
+
+$$
+\frac{\partial c}{\partial a} = 1, \quad \frac{\partial c}{\partial b} = 1
+$$
+
+局所微分が 1 なので、上流から流れてきた勾配をそのまま流すだけ:
+
+```python
+def __add__(self, other):
+    other = other if isinstance(other, Value) else Value(other)
+    out = Value(self.data + other.data, (self, other), '+')
+
+    def _backward():
+        self.grad  += out.grad  # 加算の局所微分は 1
+        other.grad += out.grad
+    out._backward = _backward
+
+    return out
+```
+
+## 3. 計算グラフと Backward Pass を数値で追う
+
+具体例で追ってみる。`a=2, b=-3, c=10, d=-2` として `L = (a*b + c) * d` を計算する。
+
+### Forward Pass
+
+```
+a=2, b=-3 → e = a*b = -6
+e=-6, c=10 → f = e+c = 4
+f=4, d=-2  → L = f*d = -8
+```
+
+計算グラフはこうなる（左が入力、右が出力）:
+
+<Mermaid chart={`
+graph LR
+    a["a | data: 2"] --> mul1(("*"))
+    b["b | data: -3"] --> mul1
+    mul1 --> e["e | data: -6"]
+    e --> add1(("+"))
+    c["c | data: 10"] --> add1
+    add1 --> f["f | data: 4"]
+    f --> mul2(("*"))
+    d["d | data: -2"] --> mul2
+    mul2 --> L["L | data: -8"]
+`} />
+
+### Backward Pass
+
+出力 L から逆順に、chain rule で勾配を伝播させる。
+
+**Step 1: L 自身**
+
+$$
+\frac{\partial L}{\partial L} = 1
+$$
+
+```
+L.grad = 1.0
+```
+
+**Step 2: 最後の乗算 $L = f \cdot d$**
+
+$$
+\frac{\partial L}{\partial f} = d = -2, \quad \frac{\partial L}{\partial d} = f = 4
+$$
+
+```
+f.grad += d.data * L.grad = (-2) * 1.0 = -2.0
+d.grad += f.data * L.grad = 4 * 1.0   =  4.0
+```
+
+**Step 3: 加算 $f = e + c$**
+
+加算の局所微分は 1 なので、$\frac{\partial L}{\partial e} = \frac{\partial L}{\partial f} \cdot 1 = -2.0$:
+
+```
+e.grad += f.grad = -2.0
+c.grad += f.grad = -2.0
+```
+
+**Step 4: 最初の乗算 $e = a \cdot b$**
+
+$$
+\frac{\partial L}{\partial a} = \frac{\partial L}{\partial e} \cdot \frac{\partial e}{\partial a} = (-2.0) \cdot (-3) = 6.0
+$$
+
+$$
+\frac{\partial L}{\partial b} = \frac{\partial L}{\partial e} \cdot \frac{\partial e}{\partial b} = (-2.0) \cdot 2 = -4.0
+$$
+
+```
+a.grad += b.data * e.grad = (-3) * (-2.0) = 6.0
+b.grad += a.data * e.grad = 2 * (-2.0)    = -4.0
+```
+
+<Mermaid chart={`
+graph LR
+    a["a | data: 2 | grad: 6.0"] --> mul1(("*"))
+    b["b | data: -3 | grad: -4.0"] --> mul1
+    mul1 --> e["e | data: -6 | grad: -2.0"]
+    e --> add1(("+"))
+    c["c | data: 10 | grad: -2.0"] --> add1
+    add1 --> f["f | data: 4 | grad: -2.0"]
+    f --> mul2(("*"))
+    d["d | data: -2 | grad: 4.0"] --> mul2
+    mul2 --> L["L | data: -8 | grad: 1.0"]
+`} />
+
+### 検算
+
+勾配が正しいか、数値微分で確認できる。微小な $h$ を使って:
+
+$$
+\frac{\partial L}{\partial a} \approx \frac{L(a+h) - L(a)}{h}
+$$
+
+例えば `a.grad = 6.0` は「a を微小に増やすと L はその 6 倍増える」という意味になる。
+実際に計算してみると:
+
+```python
+>>> a=2; b=-3; c=10; d=-2
+>>> L1 = (a*b+c)*d; L2 = ((a+h)*b+c)*d
+>>> (L2-L1)/h
+6.000000000000227
+```
+
+## 4. トポロジカルソートと backward() メソッド
+
+backward を正しい順序で実行するために、計算グラフをトポロジカルソートする。「すべての子ノードの勾配が確定してから、親ノードの勾配を計算する」という順序を保証している。
+
+```python
+def backward(self):
+    topo = []
+    visited = set()
+    def build_topo(v):
+        if v not in visited:
+            visited.add(v)
+            for child in v._prev:
+                build_topo(child)
+            topo.append(v)
+    build_topo(self)
+
+    self.grad = 1.0
+    for v in reversed(topo):
+        v._backward()
+```
+
+`reversed(topo)` で出力側から入力側へ逆順に処理していく。
+
+## 5. `+=` が重要な理由
+
+勾配の更新が `=` ではなく `+=` なのは、同じノードが複数の演算に使われることがあるからだ。
+
+```python
+a = Value(3.0)
+b = a + a  # a が2回使われている
+```
+
+この場合 $b = a + a = 2a$ なので $\frac{\partial b}{\partial a} = 2$ になるはず。加算ノードの backward では、1回目の経路で `a.grad += 1 * out.grad`、2回目の経路でも `a.grad += 1 * out.grad` が実行され、合計で `a.grad = 2 * out.grad` となる。
+
+これは多変数の chain ruleを直接的に実装している:
+
+$$
+\frac{\partial L}{\partial a} = \sum_{i} \frac{\partial L}{\partial c_i} \cdot \frac{\partial c_i}{\partial a}
+$$
+
+ノード $a$ が複数の演算 $c_1, c_2, \ldots$ に使われている場合、各経路からの勾配を**合算**する。`=` で上書きしてしまうと、最後の経路の勾配しか残らない。
+
+この副作用として、学習のループ内で明示的に勾配をリセットする必要が出てくる。
+
+```python
+for p in model.parameters():
+    p.grad = 0.0
+```
+
+## 6. PyTorch との対応関係
+
+micrograd と PyTorch の対応:
+
+| micrograd | PyTorch | 備考 |
+|-----------|---------|------|
+| `Value(2.0)` | `torch.tensor(2.0, requires_grad=True)` | スカラー vs テンソル |
+| `value.data` | `tensor.data` / `tensor.item()` | 実際の値 |
+| `value.grad` | `tensor.grad` | 勾配 |
+| `value.backward()` | `tensor.backward()` | backprop 実行 |
+| `value.grad = 0.0` | `optimizer.zero_grad()` | 勾配リセット |
+
+PyTorch で同じ計算をやってみると:
+
+```python
+import torch
+
+a = torch.tensor(2.0, requires_grad=True)
+b = torch.tensor(-3.0, requires_grad=True)
+c = torch.tensor(10.0, requires_grad=True)
+d = torch.tensor(-2.0, requires_grad=True)
+
+L = (a * b + c) * d
+L.backward()
+
+print(f"a.grad = {a.grad}")  # 6.0
+print(f"b.grad = {b.grad}")  # -4.0
+print(f"c.grad = {c.grad}")  # -2.0
+print(f"d.grad = {d.grad}")  # 4.0
+```
+
+micrograd の手計算と完全に一致する。micrograd はスカラーしか扱えないが、PyTorch はテンソル（多次元配列）を扱える。計算グラフを構築して chain rule で勾配を伝播させるという仕組みは同じだ。
+## まとめ
+
+backpropagation は、chain rule を計算グラフ上で機械的に適用するアルゴリズムだ。各ノードは以下の計算をする:
+
+$$
+\frac{\partial L}{\partial x_i} = \frac{\partial L}{\partial y} \cdot \frac{\partial y}{\partial x_i}
+$$
+
+上流の勾配 $\frac{\partial L}{\partial y}$（= `out.grad`）に局所微分 $\frac{\partial y}{\partial x_i}$ を掛けて、入力ノードの勾配に累積（`+=`）する。これを出力から入力に向かって繰り返すだけでよい。
+
+---
+
+*参考:*
+- *[micrograd GitHub リポジトリ](https://github.com/karpathy/micrograd)*
+- *[The spelled-out intro to neural networks and backpropagation: building micrograd](https://www.youtube.com/watch?v=VMj-3S1tku0)*

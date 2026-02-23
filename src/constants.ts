@@ -4,87 +4,88 @@ type MapKey<T extends Map<any, any>> = T extends Map<infer K, any> ? K : never;
  * Metadata for your site
  */
 export const SITE: Record<string, string> = {
-  /**
-   * Base URL of your site, used in sitemap generation
-   */
-  url: "https://ikuma.dev",
-  /**
-   * Site-wide title
-   */
-  title: "Ikuma Sudo's Blog",
-  /**
-   * Used on index page and as a fallback if no title is set
-   */
-  titleDefault: "Ikuma Sudo's Blog",
-  /**
-   * Used in meta tags, RSS feed, and other places
-   */
-  description: "Ikuma Sudo's Blog",
-  /**
-   * Language used in the <html> tag
-   */
-  lang: "ja-JP",
-  /**
-   * Name of the image inside `public` folder that should be used as a default og:image
-   */
-  defaultOgImage: "/og-image.png",
-  /**
-   * Default author name that gets added to meta tags
-   */
-  defaultAuthor: "IkumaSudo",
+    /**
+     * Base URL of your site, used in sitemap generation
+     */
+    url: "https://ikuma.dev",
+    /**
+     * Site-wide title
+     */
+    title: "Ikuma Sudo's Blog",
+    /**
+     * Used on index page and as a fallback if no title is set
+     */
+    titleDefault: "Ikuma Sudo's Blog",
+    /**
+     * Used in meta tags, RSS feed, and other places
+     */
+    description: "Ikuma Sudo's Blog",
+    /**
+     * Language used in the <html> tag
+     */
+    lang: "ja-JP",
+    /**
+     * Name of the image inside `public` folder that should be used as a default og:image
+     */
+    defaultOgImage: "/og-image.png",
+    /**
+     * Default author name that gets added to meta tags
+     */
+    defaultAuthor: "IkumaSudo",
 };
 
 interface Header {
-  internal: Array<{ title: string; url: string }>;
-  external: Array<{
-    title: string;
-    url: string;
-    props?: Record<string, unknown>;
-  }>;
+    internal: Array<{ title: string; url: string }>;
+    external: Array<{
+        title: string;
+        url: string;
+        props?: Record<string, unknown>;
+    }>;
 }
 
 /**
  * Links used in the header
  */
 export const HEADER: Header = {
-  /**
-   * Internal links to other subpages shown in the header navigation
-   */
-  internal: [
-    {
-      title: "Blog",
-      url: "/blog/",
-    },
-  ],
-  /**
-   * Arbitrary list of links (e.g. social media) shown on the right side of the header
-   */
-  external: [
-    {
-      title: "GitHub",
-      url: "https://github.com/ikumasudo",
-      props: {
-        target: "_blank",
-      },
-    },
-    {
-      title: "Zenn",
-      url: "https://zenn.dev/ikumasudo",
-      props: {
-        target: "_blank",
-      },
-    },
-  ],
+    /**
+     * Internal links to other subpages shown in the header navigation
+     */
+    internal: [
+        {
+            title: "Blog",
+            url: "/blog/",
+        },
+    ],
+    /**
+     * Arbitrary list of links (e.g. social media) shown on the right side of the header
+     */
+    external: [
+        {
+            title: "GitHub",
+            url: "https://github.com/ikumasudo",
+            props: {
+                target: "_blank",
+            },
+        },
+        {
+            title: "Zenn",
+            url: "https://zenn.dev/ikumasudo",
+            props: {
+                target: "_blank",
+            },
+        },
+    ],
 };
 
 /**
  * A map of name - slug pairs
  */
 export const FRONTMATTER_TAGS = new Map([
-  ["General", "general"] as const,
-  ["Coding", "coding"] as const,
-  ["MDX", "mdx"] as const,
-  ["Open Source", "open-source"] as const,
+    ["General", "general"] as const,
+    ["Coding", "coding"] as const,
+    ["MDX", "mdx"] as const,
+    ["Open Source", "open-source"] as const,
+    ["Machine Learning", "machine-learning"] as const,
 ]);
 
 export type FrontmatterTag = MapKey<typeof FRONTMATTER_TAGS>;
