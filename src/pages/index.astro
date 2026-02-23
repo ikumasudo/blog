@@ -11,23 +11,32 @@ import Spacer from "@components/spacer.astro";
 import { SITE } from "@constants";
 
 const OSS_PROJECTS: Array<{ name: string; url: string; description: string }> =
-  [
-    {
-      name: "secco",
-      url: "https://github.com/LekoArts/secco",
-      description: "Local package testing made easy",
-    },
-    {
-      name: "astro-loaders",
-      url: "https://github.com/LekoArts/astro-loaders",
-      description: "Loaders for Astro's Content Layer",
-    },
-    {
-      name: "annum",
-      url: "https://github.com/LekoArts/annum",
-      description: "Visualize your Trakt.tv history",
-    },
-  ];
+    [
+        {
+            name: "secco",
+            url: "https://github.com/LekoArts/secco",
+            description: "Local package testing made easy",
+        },
+        {
+            name: "astro-loaders",
+            url: "https://github.com/LekoArts/astro-loaders",
+            description: "Loaders for Astro's Content Layer",
+        },
+        {
+            name: "annum",
+            url: "https://github.com/LekoArts/annum",
+            description: "Visualize your Trakt.tv history",
+        },
+    ];
+
+const INTERESTS: Array<{ label: string; emoji: string }> = [
+    { label: "Machine Learning", emoji: "🧠" },
+    { label: "Computer Vision", emoji: "👁️" },
+    { label: "AI Agents", emoji: "🤖" },
+    { label: "Self Hosting", emoji: "🖥️" },
+    { label: "Golang", emoji: "🐹" },
+    { label: "Web", emoji: "🌐" },
+];
 
 const POSTS_TO_SHOW = 3;
 
@@ -35,37 +44,60 @@ const posts = sortAsc(await getCollection("blog")).slice(0, POSTS_TO_SHOW);
 ---
 
 <Layout>
-  <Seo slot="seo" />
-  <SkipNavContent>
-    <h1 class="sr-only">{SITE.title}</h1>
-    <Prose>
-      <Hero />
-    </Prose>
-    <Spacer axis="vertical" size={32} />
-    <section>
-      <div
-        class="border-b border-border pb-4 flex justify-between items-center"
-      >
-        <h2 class="font-medium text-xl md:text-2xl lg:text-3xl text-highlight">
-          Latest Posts
-        </h2>
-        <div><Link href="/blog/">Read all posts</Link></div>
-      </div>
-      <Spacer axis="vertical" size={8} />
-      <div class="flex gap-10 flex-col">
-        {
-          posts.map(({ data: post }) => (
-            <div>
-              <Link variant="highlight" href={`/${post.slug}/`}>
-                {post.title}
-              </Link>
-              <Spacer axis="vertical" size={2} />
-              <div class="text-faded">{defaultDateFormat(post.date)}</div>
+    <Seo slot="seo" />
+    <SkipNavContent>
+        <h1 class="sr-only">{SITE.title}</h1>
+        <Prose>
+            <Hero />
+        </Prose>
+        <Spacer axis="vertical" size={32} />
+        <section>
+            <h2
+                class="font-medium text-xl md:text-2xl lg:text-3xl text-highlight"
+            >
+                Interests
+            </h2>
+            <Spacer axis="vertical" size={8} />
+            <div class="flex flex-wrap gap-3">
+                {
+                    INTERESTS.map(({ label, emoji }) => (
+                        <span class="inline-flex items-center gap-1.5 rounded-full bg-ic-bg border border-ic-border px-4 py-2 text-sm md:text-base text-text transition-transform hover:-translate-y-0.5">
+                            <span>{emoji}</span>
+                            <span>{label}</span>
+                        </span>
+                    ))
+                }
             </div>
-          ))
-        }
-      </div>
-    </section>
-    <Spacer axis="vertical" size={24} />
-  </SkipNavContent>
+        </section>
+        <Spacer axis="vertical" size={32} />
+        <section>
+            <div
+                class="border-b border-border pb-4 flex justify-between items-center"
+            >
+                <h2
+                    class="font-medium text-xl md:text-2xl lg:text-3xl text-highlight"
+                >
+                    Latest Posts
+                </h2>
+                <div><Link href="/blog/">Read all posts</Link></div>
+            </div>
+            <Spacer axis="vertical" size={8} />
+            <div class="flex gap-10 flex-col">
+                {
+                    posts.map(({ data: post }) => (
+                        <div>
+                            <Link variant="highlight" href={`/${post.slug}/`}>
+                                {post.title}
+                            </Link>
+                            <Spacer axis="vertical" size={2} />
+                            <div class="text-faded">
+                                {defaultDateFormat(post.date)}
+                            </div>
+                        </div>
+                    ))
+                }
+            </div>
+        </section>
+        <Spacer axis="vertical" size={24} />
+    </SkipNavContent>
 </Layout>
