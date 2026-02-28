@@ -11,9 +11,6 @@
 	--color-subtle: var(--color-gray-600);
 	--color-faded: var(--color-gray-500);
 	--color-border: var(--color-gray-200);
-
-	--color-ic-bg: var(--color-white);
-	--color-ic-border: var(--color-gray-200);
 }
 
 @layer theme {
@@ -26,9 +23,6 @@
 			--color-subtle: var(--color-gray-300);
 			--color-faded: var(--color-gray-400);
 			--color-border: var(--color-gray-700);
-
-			--color-ic-bg: var(--color-gray-700);
-			--color-ic-border: var(--color-gray-600);
 		}
 	}
 }

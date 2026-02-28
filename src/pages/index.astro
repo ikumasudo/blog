@@ -29,21 +29,6 @@ const OSS_PROJECTS: Array<{ name: string; url: string; description: string }> =
         },
     ];
 
-const INTERESTS: Array<{ label: string; labelJa: string; emoji: string }> = [
-    { label: "Machine Learning", labelJa: "機械学習", emoji: "🧠" },
-    { label: "Computer Vision", labelJa: "コンピュータビジョン", emoji: "👁️" },
-    { label: "AI Agents", labelJa: "AIエージェント", emoji: "🤖" },
-    { label: "Self Hosting", labelJa: "セルフホスティング", emoji: "🖥️" },
-    { label: "Infrastructure", labelJa: "インフラ", emoji: "🏗️" },
-    { label: "Web Development", labelJa: "Web開発", emoji: "🌐" },
-    { label: "Math & Science", labelJa: "数学・自然科学", emoji: "🔬" },
-    { label: "History", labelJa: "歴史", emoji: "🌍" },
-    { label: "Economics", labelJa: "経済", emoji: "💹" },
-    { label: "Novel", labelJa: "小説", emoji: "📖" },
-    { label: "Organizational Design", labelJa: "組織設計", emoji: "🏛️" },
-    { label: "Languages", labelJa: "言語", emoji: "🗣️" },
-];
-
 const POSTS_TO_SHOW = 3;
 
 const posts = sortAsc(await getCollection("blog")).slice(0, POSTS_TO_SHOW);
@@ -56,26 +41,6 @@ const posts = sortAsc(await getCollection("blog")).slice(0, POSTS_TO_SHOW);
         <Prose>
             <Hero />
         </Prose>
-        <Spacer axis="vertical" size={32} />
-        <section>
-            <h2
-                class="font-medium text-xl md:text-2xl lg:text-3xl text-highlight"
-            >
-                Interests
-            </h2>
-            <Spacer axis="vertical" size={8} />
-            <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-                {
-                    INTERESTS.map(({ label, labelJa, emoji }) => (
-                        <div class="flex flex-col items-center text-center rounded-xl bg-ic-bg border border-ic-border px-3 py-4 transition-all duration-200 ease-in-out hover:-translate-y-1 hover:shadow-md dark:hover:shadow-gray-900/50">
-                            <span class="text-2xl md:text-3xl" role="img" aria-hidden="true">{emoji}</span>
-                            <span class="mt-2 text-sm md:text-base font-medium text-highlight leading-tight">{label}</span>
-                            <span class="mt-0.5 text-xs md:text-sm text-faded leading-tight">{labelJa}</span>
-                        </div>
-                    ))
-                }
-            </div>
-        </section>
         <Spacer axis="vertical" size={32} />
         <section>
             <div
