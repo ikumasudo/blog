@@ -6,7 +6,9 @@ interface Props {
 const { chart } = Astro.props
 ---
 
-<pre class="mermaid" data-chart={chart} set:text={chart} />
+<div class="not-prose">
+	<pre class="mermaid" data-chart={chart} set:text={chart} />
+</div>
 
 <script>
 	const init = async () => {
