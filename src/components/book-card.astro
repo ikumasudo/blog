@@ -1,0 +1,24 @@
+---
+import type { CollectionEntry } from 'astro:content'
+import { defaultDateFormat } from '@utils'
+import Link from '@components/link.astro'
+
+interface Props {
+	book: CollectionEntry<'books'>['data']
+}
+
+const { book } = Astro.props
+---
+
+<div>
+	{book.url ? (
+		<Link variant="highlight" href={book.url} target="_blank" rel="noopener noreferrer">
+			{book.title}
+		</Link>
+	) : (
+		<span class="text-highlight text-lg md:text-xl lg:text-2xl">{book.title}</span>
+	)}
+	<div class="text-faded">
+		{book.author}{book.dateRead && ` · ${defaultDateFormat(new Date(book.dateRead))}`}
+	</div>
+</div>

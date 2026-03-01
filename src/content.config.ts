@@ -1,4 +1,4 @@
-import { glob } from "astro/loaders";
+import { file, glob } from "astro/loaders";
 import { defineCollection, z } from "astro:content";
 import { FRONTMATTER_TAGS } from "./constants";
 
@@ -20,6 +20,18 @@ const blog = defineCollection({
   }),
 });
 
+const books = defineCollection({
+  loader: file("content/books/books.json"),
+  schema: z.object({
+    title: z.string(),
+    author: z.string(),
+    isbn: z.string().optional(),
+    dateRead: z.string().optional(),
+    url: z.string().optional(),
+  }),
+});
+
 export const collections = {
   blog,
+  books,
 };

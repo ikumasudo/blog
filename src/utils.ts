@@ -1,6 +1,7 @@
 import type { FrontmatterTag } from '@constants'
 import type { AstroIntegration } from 'astro'
 import type { CollectionEntry } from 'astro:content'
+
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 import sirv from 'sirv'

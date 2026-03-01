@@ -1,0 +1,63 @@
+---
+import Layout from '@layouts/layout.astro'
+import Seo from '@components/seo.astro'
+import SkipNavContent from '@components/a11y/skip-nav-content.astro'
+import Spacer from '@components/spacer.astro'
+import BookCard from '@components/book-card.astro'
+import { getCollection } from 'astro:content'
+
+const allBooks = await getCollection('books')
+const sorted = [...allBooks].sort((a, b) => {
+	if (!a.data.dateRead) return 1
+	if (!b.data.dateRead) return -1
+	return new Date(b.data.dateRead).getTime() - new Date(a.data.dateRead).getTime()
+})
+
+const groups: { year: string; books: typeof sorted }[] = []
+let otherBooks: typeof sorted = []
+
+for (const book of sorted) {
+	if (!book.data.dateRead) {
+		otherBooks.push(book)
+		continue
+	}
+	const year = new Date(book.data.dateRead).getFullYear().toString()
+	const existing = groups.find((g) => g.year === year)
+	if (existing) {
+		existing.books.push(book)
+	} else {
+		groups.push({ year, books: [book] })
+	}
+}
+---
+
+<Layout>
+	<Seo slot="seo" title="Books" />
+	<SkipNavContent>
+		<h1 class="sr-only">Books</h1>
+		<Spacer axis="vertical" size={2} />
+		{groups.map((group) => (
+			<>
+				<h2 class="font-medium text-xl text-highlight">{group.year}</h2>
+				<Spacer axis="vertical" size={8} />
+				<div class="flex gap-10 flex-col">
+					{group.books.map((entry) => (
+						<BookCard book={entry.data} />
+					))}
+				</div>
+				<Spacer axis="vertical" size={16} />
+			</>
+		))}
+		{otherBooks.length > 0 && (
+			<>
+				<h2 class="font-medium text-xl text-highlight">その他</h2>
+				<Spacer axis="vertical" size={8} />
+				<div class="flex gap-10 flex-col">
+					{otherBooks.map((entry) => (
+						<BookCard book={entry.data} />
+					))}
+				</div>
+			</>
+		)}
+	</SkipNavContent>
+</Layout>

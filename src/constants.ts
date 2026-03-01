@@ -55,6 +55,10 @@ export const HEADER: Header = {
             title: "Blog",
             url: "/blog/",
         },
+        {
+            title: "Books",
+            url: "/books/",
+        },
     ],
     /**
      * Arbitrary list of links (e.g. social media) shown on the right side of the header

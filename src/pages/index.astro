@@ -8,7 +8,19 @@ import { defaultDateFormat, sortAsc } from "@utils";
 import Link from "@components/link.astro";
 import Prose from "@components/prose.astro";
 import Spacer from "@components/spacer.astro";
+import BookCard from "@components/book-card.astro";
 import { SITE } from "@constants";
+
+const BOOKS_TO_SHOW = 4;
+
+const allBooks = await getCollection("books");
+const recentBooks = [...allBooks]
+    .sort((a, b) => {
+        if (!a.data.dateRead) return 1;
+        if (!b.data.dateRead) return -1;
+        return new Date(b.data.dateRead).getTime() - new Date(a.data.dateRead).getTime();
+    })
+    .slice(0, BOOKS_TO_SHOW);
 
 const OSS_PROJECTS: Array<{ name: string; url: string; description: string }> =
     [
@@ -68,6 +80,23 @@ const posts = sortAsc(await getCollection("blog")).slice(0, POSTS_TO_SHOW);
                         </div>
                     ))
                 }
+            </div>
+        </section>
+        <Spacer axis="vertical" size={24} />
+        <section>
+            <div
+                class="border-b border-border pb-4 flex justify-between items-center"
+            >
+                <h2
+                    class="font-medium text-xl md:text-2xl lg:text-3xl text-highlight"
+                >
+                    Recently Read
+                </h2>
+                <div><Link href="/books/">See all books</Link></div>
+            </div>
+            <Spacer axis="vertical" size={8} />
+            <div class="flex gap-10 flex-col">
+                {recentBooks.map((entry) => <BookCard book={entry.data} />)}
             </div>
         </section>
         <Spacer axis="vertical" size={24} />
