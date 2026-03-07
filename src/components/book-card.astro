@@ -19,6 +19,9 @@ const { book } = Astro.props
 		<span class="text-highlight text-lg md:text-xl lg:text-2xl">{book.title}</span>
 	)}
 	<div class="text-faded">
-		{book.author}{book.dateRead && ` · ${defaultDateFormat(new Date(book.dateRead))}`}
+		{book.author}
+		{book.status === "reading"
+			? <span class="ml-2 text-sm text-primary">· 読書中</span>
+			: book.dateRead && ` · ${defaultDateFormat(new Date(book.dateRead))}`}
 	</div>
 </div>

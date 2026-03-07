@@ -54,5 +54,21 @@
     "isbn": "9784150315856",
     "dateRead": "2026-01-05",
     "url": "https://www.hayakawa-online.co.jp/shop/g/g0000315856/"
+  },
+  {
+    "id": "9784492224236",
+    "title": "なぜ悪人が上に立つのか",
+    "author": "ブライアン・クラース",
+    "isbn": "9784492224236",
+    "url": "https://str.toyokeizai.net/books/9784492224236/",
+    "status": "reading"
+  },
+  {
+    "id": "9784839987800",
+    "title": "つくりながら学ぶ！LLM 自作入門",
+    "author": "Sebastian Raschka",
+    "isbn": "9784839987800",
+    "dateRead": "2026-01-10",
+    "url": "https://book.mynavi.jp/ec/products/detail/id=146901"
   }
 ]

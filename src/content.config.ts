@@ -28,6 +28,7 @@ const books = defineCollection({
     isbn: z.string().optional(),
     dateRead: z.string().optional(),
     url: z.string().optional(),
+    status: z.enum(["reading", "finished"]).default("finished"),
   }),
 });
 

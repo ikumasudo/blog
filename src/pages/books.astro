@@ -7,7 +7,8 @@ import BookCard from '@components/book-card.astro'
 import { getCollection } from 'astro:content'
 
 const allBooks = await getCollection('books')
-const sorted = [...allBooks].sort((a, b) => {
+const readingBooks = allBooks.filter((b) => b.data.status === 'reading')
+const sorted = [...allBooks].filter((b) => b.data.status !== 'reading').sort((a, b) => {
 	if (!a.data.dateRead) return 1
 	if (!b.data.dateRead) return -1
 	return new Date(b.data.dateRead).getTime() - new Date(a.data.dateRead).getTime()
@@ -36,6 +37,16 @@ for (const book of sorted) {
 	<SkipNavContent>
 		<h1 class="sr-only">Books</h1>
 		<Spacer axis="vertical" size={2} />
+		{readingBooks.length > 0 && (
+			<>
+				<h2 class="font-medium text-xl text-highlight">読書中</h2>
+				<Spacer axis="vertical" size={8} />
+				<div class="flex gap-10 flex-col">
+					{readingBooks.map((entry) => <BookCard book={entry.data} />)}
+				</div>
+				<Spacer axis="vertical" size={16} />
+			</>
+		)}
 		{groups.map((group) => (
 			<>
 				<h2 class="font-medium text-xl text-highlight">{group.year}</h2>
