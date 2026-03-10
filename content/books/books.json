@@ -78,5 +78,13 @@
     "isbn": "9784344041271",
     "dateRead": "2026-03-08",
     "url": "https://www.gentosha.co.jp/book/detail/9784344041271/"
+  },
+  {
+    "id": "9784299064042",
+    "title": "一次元の挿し木",
+    "author": "松下龍之介",
+    "isbn": "9784299064042",
+    "url": "https://tkj.jp/book/?cd=TD064042",
+    "status": "reading"
   }
 ]
