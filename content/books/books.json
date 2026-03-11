@@ -86,5 +86,13 @@
     "isbn": "9784299064042",
     "url": "https://tkj.jp/book/?cd=TD064042",
     "status": "reading"
+  },
+  {
+    "id": "9784798179803",
+    "title": "なっとく!関数型プログラミング",
+    "author": "Michal Plachta",
+    "isbn": "9784798179803",
+    "url": "https://www.shoeisha.co.jp/book/detail/9784798179803",
+    "status": "reading"
   }
 ]
