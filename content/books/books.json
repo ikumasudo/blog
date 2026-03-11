@@ -84,7 +84,14 @@
     "title": "一次元の挿し木",
     "author": "松下龍之介",
     "isbn": "9784299064042",
-    "dateRead": "2026-03-11",
     "url": "https://tkj.jp/book/?cd=TD064042"
+  },
+  {
+    "id": "9784798179803",
+    "title": "なっとく!関数型プログラミング",
+    "author": "Michal Plachta",
+    "isbn": "9784798179803",
+    "url": "https://www.shoeisha.co.jp/book/detail/9784798179803",
+    "status": "reading"
   }
 ]
