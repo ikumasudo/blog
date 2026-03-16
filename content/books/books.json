@@ -94,5 +94,13 @@
     "isbn": "9784152104113",
     "url": "https://www.hayakawa-online.co.jp/shop/g/g0005210411/",
     "status": "reading"
+  },
+  {
+    "id": "9781633438859",
+    "title": "Deep Learning with PyTorch, Second Edition",
+    "author": "Howard Huang, Eli Stevens, Luca Antiga, Thomas Viehmann",
+    "isbn": "9781633438859",
+    "url": "https://www.manning.com/books/deep-learning-with-pytorch-second-edition",
+    "status": "reading"
   }
 ]
