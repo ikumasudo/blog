@@ -102,5 +102,13 @@
     "isbn": "9781633438859",
     "url": "https://www.manning.com/books/deep-learning-with-pytorch-second-edition",
     "status": "reading"
+  },
+  {
+    "id": "9781386137085",
+    "title": "Let's Go (2nd edition)",
+    "author": "Alex Edwards",
+    "isbn": "9781386137085",
+    "url": "https://lets-go.alexedwards.net/",
+    "status": "reading"
   }
 ]
