@@ -84,6 +84,8 @@ const posts = sortAsc(await getCollection("blog")).slice(0, POSTS_TO_SHOW);
                     ))
                 }
             </div>
+            <Spacer axis="vertical" size={8} />
+            <div><Link href="/blog/">Read all posts</Link></div>
         </section>
         <Spacer axis="vertical" size={24} />
         <section>
@@ -101,6 +103,8 @@ const posts = sortAsc(await getCollection("blog")).slice(0, POSTS_TO_SHOW);
             <div class="flex gap-10 flex-col">
                 {booksToShow.map((entry) => <BookCard book={entry.data} />)}
             </div>
+            <Spacer axis="vertical" size={8} />
+            <div><Link href="/books/">See all books</Link></div>
         </section>
         <Spacer axis="vertical" size={24} />
     </SkipNavContent>
