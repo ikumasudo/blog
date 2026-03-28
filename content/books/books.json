@@ -88,14 +88,6 @@
     "url": "https://tkj.jp/book/?cd=TD064042"
   },
   {
-    "id": "9784152104113",
-    "title": "ブレイクショットの軌跡",
-    "author": "逢坂冬馬",
-    "isbn": "9784152104113",
-    "url": "https://www.hayakawa-online.co.jp/shop/g/g0005210411/",
-    "status": "reading"
-  },
-  {
     "id": "9781633438859",
     "title": "Deep Learning with PyTorch, Second Edition",
     "author": "Howard Huang, Eli Stevens, Luca Antiga, Thomas Viehmann",
@@ -119,12 +111,4 @@
     "url": "https://bnn.co.jp/products/9784802513296",
     "status": "reading"
   },
-  {
-    "id": "9784062884495",
-    "title": "社会学史",
-    "author": "大澤真幸",
-    "isbn": "9784062884495",
-    "url": "https://bookclub.kodansha.co.jp/product?item=0000210935",
-    "status": "reading"
-  }
 ]
