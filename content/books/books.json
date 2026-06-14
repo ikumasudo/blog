@@ -100,8 +100,8 @@
     "title": "Let's Go (2nd edition)",
     "author": "Alex Edwards",
     "isbn": "9781386137085",
-    "url": "https://lets-go.alexedwards.net/",
-    "status": "reading"
+    "dateRead": "2026-06-14",
+    "url": "https://lets-go.alexedwards.net/"
   },
   {
     "id": "9784802513296",
@@ -182,5 +182,37 @@
     "isbn": "9784815636876",
     "dateRead": "2026-06-12",
     "url": "https://www.sbcr.jp/product/4815636876/"
+  },
+  {
+    "id": "9784163916330",
+    "title": "踏切の幽霊",
+    "author": "高野和明",
+    "isbn": "9784163916330",
+    "dateRead": "2026-06-14",
+    "url": "https://books.bunshun.jp/ud/book/num/9784163916330"
+  },
+  {
+    "id": "9784044005795",
+    "title": "日本人のための第一次世界大戦史",
+    "author": "板谷敏彦",
+    "isbn": "9784044005795",
+    "dateRead": "2026-06-14",
+    "url": "https://www.kadokawa.co.jp/product/321912000023/"
+  },
+  {
+    "id": "9784150504199",
+    "title": "それをお金で買いますか 市場主義の限界",
+    "author": "マイケル・サンデル",
+    "isbn": "9784150504199",
+    "url": "https://www.hayakawa-online.co.jp/shop/g/g0000090419/",
+    "status": "reading"
+  },
+  {
+    "id": "9784535804371",
+    "title": "母性愛神話の罠",
+    "author": "大日向雅美",
+    "isbn": "9784535804371",
+    "url": "https://www.nippyo.co.jp/shop/book/6872.html",
+    "status": "reading"
   }
 ]
